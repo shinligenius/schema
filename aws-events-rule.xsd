@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/aws-events-rule"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/aws-events-rule"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xsd:element name="aws-events-rule">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Description" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="EventBusName"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="Name" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="RoleArn" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:choice minOccurs="1" maxOccurs="1">
+                    <xsd:element ref="EventPattern" />
+                    <xsd:element ref="ScheduleExpression" />
+                </xsd:choice>
+                <xsd:element ref="State" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Targets" minOccurs="0"
+                    maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Description">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The description of the rule.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="512" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="EventBusName">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The event bus to associate with this rule. If you omit this, the default event bus is used.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="256" />
+                <xsd:pattern value="[/\.\-_A-Za-z0-9]+" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="EventPattern">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Describes which events are routed to the specified target. For more information, see Events and Event Patterns in EventBridge in the Amazon EventBridge User Guide.
+                    
+                    When using CloudFormation, you must enclose each part of the event pattern in square brackets, as follows:
+                    "EventPattern": { "source": [ "aws.ec2" ], "detail-type": [ "EC2 Instance State-change Notification" ] }
+
+                    A rule must contain either EventPattern or ScheduleExpression.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Name">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The name of the rule. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the rule name.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="64" />
+                <xsd:pattern value="[\.\-_A-Za-z0-9]+" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="RoleArn">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The Amazon Resource Name (ARN) of the role that is used for target invocation.
+
+                    If you're setting an event bus in another account as the target and that account granted permission to your account through an organization instead 
+                    of directly by the account ID, you must specify a RoleArn with proper permissions in the Target structure, instead of here in this parameter.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1600" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="ScheduleExpression">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The scheduling expression that determines when and how often the rule runs. For more information, see Schedule Expressions for Rules.
+
+                    A rule must contain either ScheduleExpression or EventPattern.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="256" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="State">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Indicates whether the rule is enabled.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern value="^DISABLED|ENABLED$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Targets">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The AWS resources that are invoked when the rule is triggered. For information about valid targets, see PutTargets.
+
+                    If you're setting the event bus of another account as the target and that account granted permission to your account through an organization instead of directly by the account ID, 
+                    you must specify a RoleArn with proper permissions in the Target structure. For more information, see Sending and Receiving Events Between AWS Accounts in the Amazon EventBridge User Guide.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Arn" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="BatchParameters"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="EcsParameters"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="HttpParameters"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="Id" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="Input" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="InputPath" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="InputTransformer"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="KinesisParameters"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="RoleArn" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="RunCommandParameters"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="SqsParameters"
+                    minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule Target -->
+    <xsd:element name="Arn">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The Amazon Resource Name (ARN) of the target.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1600" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="BatchParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    If the event target is an AWS Batch job, this contains the job definition, job name, and other parameters. For more information, see Jobs in the AWS Batch User Guide.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="ArrayProperties"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="JobDefinition"
+                    minOccurs="1" maxOccurs="1" />
+                <xsd:element ref="JobName" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="RetryStrategy"
+                    minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="EcsParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Contains the Amazon ECS task definition and task count to be used, if the event target is an Amazon ECS task. 
+                    For more information about Amazon ECS tasks, see Task Definitions in the Amazon EC2 Container Service Developer Guide.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Group" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="LaunchType" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="NetworkConfiguration"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="PlatformVersion"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="TaskCount" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="TaskDefinitionArn"
+                    minOccurs="1" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="HttpParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Contains the HTTP parameters to use when the target is a API Gateway REST endpoint.
+                    If you specify an API Gateway REST API as a target, you can use this parameter to specify headers, path parameter, query string keys/values as part of your target invoking request.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="HeaderParameters"
+                    minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="PathParameterValues"
+                    minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="QueryStringParameters"
+                    minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Id">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   A name for the target. Use a string that will help you identify the target. Each target associated with a rule must have an Id unique for that rule.
+                   The Id can include alphanumeric characters, periods (.), hyphens (-), and underscores (_).
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="64" />
+                <xsd:pattern value="[\.\-_A-Za-z0-9]+" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Input">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Valid JSON text passed to the target. If you use this property, nothing from the event text itself is passed to the target.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8192" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="InputPath">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   When you don't want to pass the entire matched event, InputPath describes which part of the event to pass to the target.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="256" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="InputTransformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Settings to enable you to provide custom input to a target based on certain event data. You can extract one or more key-value pairs from the event and then use that data to send customized input to the target.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="InputPathsMap"
+                    minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="InputTemplate"
+                    minOccurs="1" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="KinesisParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The custom parameter you can use to control the shard assignment, when the target is a Kinesis data stream. If you do not include this parameter, the default is to use the eventId as the partition key.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="PartitionKeyPath"
+                    minOccurs="1" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="RunCommandParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Parameters used when you are using the rule to invoke Amazon EC2 Run Command.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="RunCommandTargets"
+                    minOccurs="1" maxOccurs="5" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="SqsParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Contains the message group ID to use when the target is a FIFO queue.
+                    If you specify an SQS FIFO queue as a target, the queue must have content-based deduplication enabled.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="MessageGroupId"
+                    minOccurs="1" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule BatchParameters -->
+    <xsd:element name="ArrayProperties">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The array properties for the submitted job, such as the size of the array. The array size can be between 2 and 10,000. If you specify array properties for a job, it becomes an array job. 
+                    This parameter is used only if the target is an AWS Batch job.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Size" minOccurs="0"
+                    maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="JobDefinition">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The ARN or name of the job definition to use if the event target is an AWS Batch job. This job definition must already exist.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="JobName">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The name to use for this execution of the job, if the target is an AWS Batch job.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="RetryStrategy">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The retry strategy to use for failed jobs, if the target is an AWS Batch job. The retry strategy is the number of times to retry the failed job execution. 
+                    Valid values are 1–10. When you specify a retry strategy here, it overrides the retry strategy defined in the job definition.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Attempts" minOccurs="0"
+                    maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule BatchArrayProperties -->
+    <xsd:element name="Size">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The size of the array, if this is an array batch job. Valid values are integers between 2 and 10,000.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer" />
+        </xsd:simpleType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule BatchRetryStrategy -->
+    <xsd:element name="Attempts">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The number of times to attempt to retry, if the job fails. Valid values are 1–10.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer" />
+        </xsd:simpleType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule EcsParameters -->
+    <xsd:element name="Group">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Specifies an ECS task group for the task. The maximum length is 255 characters. For more information, see Task Groups.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="LaunchType">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Specifies the launch type on which your task is running. The launch type that you specify here must match one of the launch type (compatibilities) of the target task. 
+                   The FARGATE value is supported only in the Regions where AWS Fargate with Amazon ECS is supported. For more information, see AWS Fargate on Amazon ECS in the Amazon Elastic Container Service Developer Guide.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern value="^EC2|FARGATE$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="NetworkConfiguration">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Use this structure if the ECS task uses the awsvpc network mode. This structure specifies the VPC subnets and security groups associated with the task, 
+                    and whether a public IP address is to be used. This structure is required if LaunchType is FARGATE because the awsvpc mode is required for Fargate tasks.
+                    
+                    If you specify NetworkConfiguration when the target ECS task does not use the awsvpc network mode, the task fails.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="AwsVpcConfiguration"
+                    minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="PlatformVersion">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Specifies the platform version for the task. Specify only the numeric portion of the platform version, such as 1.1.0. If you omit this, the latest platform version is used.
+                    This structure is used only if LaunchType is FARGATE. For more information about valid platform versions, see AWS Fargate Platform Versions in the Amazon Elastic Container Service Developer Guide.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="TaskCount">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The number of tasks to create based on TaskDefinition. The default is 1.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="TaskDefinitionArn">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The ARN of the task definition to use. If no task revision is supplied, it defaults to the most recent revision at the time of resource creation.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1600" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule NetworkConfiguration -->
+    <xsd:element name="AwsVpcConfiguration">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Use this structure to specify the VPC subnets and security groups for the task, and whether a public IP address is to be used. This structure is relevant only for ECS tasks that use the awsvpc network mode.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="AssignPublicIp"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="SecurityGroups"
+                    minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="Subnets"
+                    minOccurs="1" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <!-- AWS::Events::Rule AwsVpcConfiguration -->
+    <xsd:element name="AssignPublicIp">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Specifies whether the task's elastic network interface receives a public IP address. You can specify ENABLED only when LaunchType in EcsParameters is set to FARGATE.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern value="^DISABLED|ENABLED$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <xsd:element name="SecurityGroups">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Specifies the security groups associated with the task. These security groups must all be in the same VPC. You can specify as many as five security groups. 
+                   If you do not specify a security group, the default security group for the VPC is used.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <xsd:element name="Subnets">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Specifies the subnets associated with the task. These subnets must all be in the same VPC. You can specify as many as 16 subnets.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <!-- AWS::Events::Rule HttpParameters -->
+    <xsd:element name="HeaderParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The headers that need to be sent as part of request invoking the API Gateway REST API.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attributeGroup
+                        ref="HeaderParametersAttributes" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="HeaderParametersAttributes">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:attributeGroup>
+    
+    <xsd:element name="PathParameterValues">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The path parameter values to be used to populate API Gateway REST API path wildcards ("*").
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <xsd:element name="QueryStringParameters">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The query string keys/values that need to be sent as part of request invoking the API Gateway REST API.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attributeGroup
+                        ref="QueryStringParametersAttributes" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="QueryStringParametersAttributes">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:attributeGroup>
+    
+    <!-- AWS::Events::Rule InputTransformer -->
+    <xsd:element name="InputPathsMap">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    Map of JSON paths to be extracted from the event. You can then insert these in the template in InputTemplate to produce the output you want to be sent to the target.
+                    
+                    InputPathsMap is an array key-value pairs, where each value is a valid JSON path. You can have as many as 10 key-value pairs. You must use JSON dot notation, not bracket notation.
+                    
+                    The keys cannot start with "AWS."
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attributeGroup
+                        ref="InputPathsMapAttributes" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="InputPathsMapAttributes">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:attributeGroup>
+    
+    <xsd:element name="InputTemplate">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Input template where you specify placeholders that will be filled with the values of the keys from InputPathsMap to customize the data sent to the target. 
+                   Enclose each InputPathsMaps value in brackets: <value> The InputTemplate must be valid JSON. For more information, see InputTransformer in the Amazon EventBridge API Reference.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="8192" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <!-- AWS::Events::Rule KinesisParameters -->
+    <xsd:element name="PartitionKeyPath">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The JSON path to be extracted from the event and used as the partition key. For more information, see Partition Key in the Amazon Kinesis Data Streams Developer Guide.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="256" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <!-- AWS::Events::Rule RunCommandTarget -->
+    <xsd:element name="RunCommandTargets">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The criteria (either InstanceIds or a tag) that specifies which EC2 instances the command is sent to.
+
+                    Note: Currently, you can include only one RunCommandTarget block, which specifies a list of InstanceIds or a tag.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Key"
+                    minOccurs="1" maxOccurs="1" />
+                <xsd:element ref="Values"
+                    minOccurs="1" maxOccurs="50" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <!-- AWS::Events::Rule RunCommandTarget -->
+    <xsd:element name="Key">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   Can be either tag: tag-key or InstanceIds.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="128" />
+                <xsd:pattern value="^[\p{L}\p{Z}\p{N}_.:/=+\-@]*$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <xsd:element name="Values">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   If Key is tag: tag-key, Values is a list of tag values. If Key is InstanceIds, Values is a list of Amazon EC2 instance IDs.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+    
+    <!-- AWS::Events::Rule SqsParameters -->
+    <xsd:element name="MessageGroupId">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                   The FIFO message group ID to use as the target.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+</xsd:schema>

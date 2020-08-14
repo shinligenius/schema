@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/aws-lambda-layer-version"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/aws-lambda-layer-version"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xsd:element name="aws-lambda-layer-version">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="CompatibleRuntimes"
+                    minOccurs="0" maxOccurs="5" />
+                <xsd:element ref="Content" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="Description" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="LayerName" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="LicenseInfo" minOccurs="0"
+                    maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="CompatibleRuntimes">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ A list of compatible function runtimes. Used for filtering with ListLayers and ListLayerVersions. ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="^dotnetcore2\.1|dotnetcore3\.1|go1\.x|java11|java8|nodejs10\.x|nodejs12\.x|provided|python2\.7|python3\.6|python3\.7|python3\.8|ruby2\.5|ruby2\.7$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Description">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ The description of the version. ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="256" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="LayerName">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ The name or Amazon Resource Name (ARN) of the layer. ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="140" />
+                <xsd:pattern
+                    value="(arn:[a-zA-Z0-9\-]+:lambda:[a-zA-Z0-9\-]+:\d{12}:layer:[a-zA-Z0-9\-_]+)|[a-zA-Z0-9\-_]+" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="LicenseInfo">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ 
+                    The layer's software license. It can be any of the following:
+                        An SPDX license identifier. For example, MIT.
+                        The URL of a license hosted on the internet. For example, https://opensource.org/licenses/MIT.
+                        The full text of the license.]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="512" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- Generic -->
+    <xsd:complexType name="identifiedType"
+        abstract="true" />
+
+    <!-- AWS::Lambda::LayerVersion Content -->
+    <xsd:element name="Content">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="S3Bucket" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="S3Key" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="S3ObjectVersion"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="zipFile" minOccurs="0"
+                    maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="S3Bucket">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ The Amazon S3 bucket of the layer archive. ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="3" />
+                <xsd:maxLength value="63" />
+                <xsd:pattern value="^[0-9A-Za-z\.\-_]+$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="S3Key">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ The Amazon S3 key of the layer archive. ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1024" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="S3ObjectVersion">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[ For versioned objects, the version of the layer archive object to use. ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1024" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="zipFile" type="xsd:string" />
+</xsd:schema>

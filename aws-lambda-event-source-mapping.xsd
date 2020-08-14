@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/aws-lambda-event-source-mapping"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/aws-lambda-event-source-mapping"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xsd:element name="aws-lambda-event-source-mapping">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="FunctionName"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:choice minOccurs="1" maxOccurs="1">
+                    <xsd:element ref="EventSourceArn" />
+                    <xsd:element ref="eventSource" />
+                </xsd:choice>
+                <xsd:element ref="BatchSize" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element
+                    ref="BisectBatchOnFunctionError" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="DestinationConfig"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="Enabled" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element
+                    ref="MaximumBatchingWindowInSeconds" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="MaximumRecordAgeInSeconds"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="MaximumRetryAttempts"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="ParallelizationFactor"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="StartingPosition"
+                    minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+            <xsd:attribute name="reference-only"
+                type="xsd:boolean" default="false" />
+            <xsd:attribute name="configuration-paths"
+                type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="BatchSize">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1" />
+                <xsd:maxInclusive value="10000" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="BisectBatchOnFunctionError">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Enabled" type="xsd:boolean"
+        default="true" />
+
+    <xsd:element name="EventSourceArn">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="FunctionName">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="140" />
+                <xsd:pattern
+                    value="(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-[0-9]{1}:)?([0-9]{12}:)?(function:)?([a-zA-Z0-9\-_]+)(:(\$LATEST|[a-zA-Z0-9\-_]+))?" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="MaximumBatchingWindowInSeconds">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="0" />
+                <xsd:maxInclusive value="300" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="MaximumRecordAgeInSeconds">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="60" />
+                <xsd:maxInclusive value="604800" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="MaximumRetryAttempts">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="0" />
+                <xsd:maxInclusive value="10000" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="ParallelizationFactor">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1" />
+                <xsd:maxInclusive value="10" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="StartingPosition">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern value="^LATEST|TRIM_HORIZON$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- AWS::Lambda::EventSourceMapping DestinationConfig -->
+    <xsd:element name="DestinationConfig">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="OnFailure" minOccurs="0"
+                    maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- AWS::Lambda::EventSourceMapping OnFailure -->
+    <xsd:element name="OnFailure">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Destination" minOccurs="1"
+                    maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Destination">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="(arn:(aws[a-zA-Z\-]*)?:[a-z0-9\-.]+:.*)|()" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- Custom fields -->
+    <xsd:element name="eventSource">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any namespace="##other"
+                    processContents="strict" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

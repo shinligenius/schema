@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/infra-resources"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/infra-resources"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+    
+    <xsd:element name="infra-resources">
+        <xsd:complexType>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element ref="infra-resource" />
+            </xsd:sequence>
+            <xsd:attribute name="directory" type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="infra-resource">
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attribute name="directory" type="xsd:string" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

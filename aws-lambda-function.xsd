@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/aws-lambda-function"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/aws-lambda-function"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xsd:element name="aws-lambda">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Code" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="DeadLetterConfig"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="Description" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Environment" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="FunctionName"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="Handler" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="KmsKeyArn" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Layers" minOccurs="0"
+                    maxOccurs="unbounded" />
+                <xsd:element ref="MemorySize" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element
+                    ref="ReservedConcurrentExecutions" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Role" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Runtime" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Tags" minOccurs="0"
+                    maxOccurs="unbounded" />
+                <xsd:element ref="Timeout" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="TracingConfig"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="VpcConfig" minOccurs="0"
+                    maxOccurs="1" />
+
+                <!-- custom fields -->
+                <xsd:element ref="trigger" minOccurs="0"
+                    maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attribute name="reference-only"
+                type="xsd:boolean" default="false" />
+            <xsd:attribute name="configuration-paths"
+                type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="FunctionName" type="xsd:string" />
+
+    <xsd:element name="Handler">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="128" />
+                <xsd:pattern value="[^\s]+" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="KmsKeyArn">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="(arn:(aws[a-zA-Z\-]*)?:[a-z0-9\-.]+:.*)|()" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Layers">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any namespace="https://github.com/shinligenius/schema/aws-lambda-layer-version"
+                    processContents="strict" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="MemorySize">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="128" />
+                <xsd:maxInclusive value="3008" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="ReservedConcurrentExecutions">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="0" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Role">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="arn:(aws[a-zA-Z\-]*)?:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Runtime">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="^dotnetcore2\.1|dotnetcore3\.1|go1\.x|java11|java8|nodejs10\.x|nodejs12\.x|provided|python2\.7|python3\.6|python3\.7|python3\.8|ruby2\.5|ruby2\.7$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Timeout">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1" />
+                <xsd:maxInclusive value="900" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- Generic -->
+    <xsd:complexType name="identifiedType"
+        abstract="true" />
+
+    <xsd:element name="Description">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="0" />
+                <xsd:maxLength value="256" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Tags">
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attributeGroup
+                        ref="TagsAttributes" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="TagsAttributes">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:attributeGroup>
+
+    <!-- AWS::Lambda::Function Code -->
+    <xsd:element name="Code">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="identifiedType">
+                    <xsd:group ref="CodeElements" />
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:group name="CodeElements">
+        <xsd:sequence>
+            <xsd:element ref="S3Bucket" minOccurs="0"
+                maxOccurs="1" />
+            <xsd:element ref="S3Key" minOccurs="0"
+                maxOccurs="1" />
+            <xsd:element ref="S3ObjectVersion" minOccurs="0"
+                maxOccurs="1" />
+            <xsd:element ref="ZipFile" minOccurs="0"
+                maxOccurs="1" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:element name="S3Bucket">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="3" />
+                <xsd:maxLength value="63" />
+                <xsd:pattern value="^[0-9A-Za-z\.\-_]+$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="S3Key">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1024" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="S3ObjectVersion">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="1024" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="ZipFile" type="xsd:string" />
+
+    <!-- AWS::Lambda::Function DeadLetterConfig -->
+    <xsd:element name="DeadLetterConfig">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="identifiedType">
+                    <xsd:group ref="DeadLetterConfigElements" />
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:group name="DeadLetterConfigElements">
+        <xsd:sequence>
+            <xsd:element ref="TargetArn" minOccurs="0"
+                maxOccurs="1" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:element name="TargetArn">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="(arn:(aws[a-zA-Z\-]*)?:[a-z0-9\-.]+:.*)|()" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- AWS::Lambda::Function Environment -->
+    <xsd:element name="Environment">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="identifiedType">
+                    <xsd:group ref="EnvironmentElements" />
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:group name="EnvironmentElements">
+        <xsd:sequence>
+            <xsd:element ref="Variables" minOccurs="0"
+                maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:element name="Variables">
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attributeGroup
+                        ref="VariablesAttributes" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="VariablesAttributes">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:attributeGroup>
+
+    <!-- AWS::Lambda::Function TracingConfig -->
+    <xsd:element name="TracingConfig">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="identifiedType">
+                    <xsd:group ref="TracingConfigElements" />
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:group name="TracingConfigElements">
+        <xsd:sequence>
+            <xsd:element ref="Mode" minOccurs="0"
+                maxOccurs="1" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:element name="Mode">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern value="^Active|PassThrough$" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- AWS::Lambda::Function VpcConfig -->
+    <xsd:element name="VpcConfig">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="identifiedType">
+                    <xsd:group ref="VpcConfigElements" />
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:group name="VpcConfigElements">
+        <xsd:sequence>
+            <xsd:element ref="SecurityGroupIds"
+                minOccurs="1" maxOccurs="5" />
+            <xsd:element ref="SubnetIds" minOccurs="1"
+                maxOccurs="16" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:element name="SecurityGroupIds" type="xsd:string" />
+
+    <xsd:element name="SubnetIds" type="xsd:string" />
+
+    <!-- Custom fields -->
+    <xsd:element name="trigger">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any namespace="##other"
+                    processContents="strict" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

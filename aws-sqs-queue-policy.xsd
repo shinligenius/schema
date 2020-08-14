@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/aws-sqs-queue-policy"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/aws-sqs-queue-policy"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xsd:element name="aws-sqs-policy">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="PolicyDocument"
+                    minOccurs="1" maxOccurs="1" />
+                <xsd:element ref="Queues" minOccurs="0"
+                    maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attribute name="reference-only"
+                type="xsd:boolean" default="false" />
+            <xsd:attribute name="configuration-paths"
+                type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Queues" type="xsd:string" />
+
+    <xsd:element name="PolicyDocument">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Version" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Id" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Statement" minOccurs="1"
+                    maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Version" type="xsd:string" />
+
+    <xsd:element name="Id" type="xsd:string" />
+
+    <xsd:element name="Statement">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Sid" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="Effect" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="Principal" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="Action" minOccurs="1"
+                    maxOccurs="7" />
+                <xsd:element ref="Resource" minOccurs="0"
+                    maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Sid" type="xsd:string" />
+
+    <xsd:element name="Effect">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="Allow" />
+                <xsd:enumeration value="Deny" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Principal">
+        <xsd:complexType>
+            <xsd:choice>
+                <xsd:element ref="ALL" minOccurs="1"
+                    maxOccurs="1" />
+
+                <xsd:choice minOccurs="1"
+                    maxOccurs="unbounded">
+                    <xsd:element ref="AWS" />
+                </xsd:choice>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="ALL" type="xsd:string" />
+    <xsd:element name="AWS">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern value="([0-9]+)|(\*{1})" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Action">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration
+                    value="sqs:AddPermission" />
+                <xsd:enumeration
+                    value="sqs:ChangeMessageVisibility" />
+                <xsd:enumeration
+                    value="sqs:DeleteMessage" />
+                <xsd:enumeration value="sqs:DeleteQueue" />
+                <xsd:enumeration
+                    value="sqs:GetQueueAttributes" />
+                <xsd:enumeration value="sqs:GetQueueUrl" />
+                <xsd:enumeration
+                    value="sqs:ListDeadLetterSourceQueues" />
+                <xsd:enumeration value="sqs:PurgeQueue" />
+                <xsd:enumeration
+                    value="sqs:ReceiveMessage" />
+                <xsd:enumeration
+                    value="sqs:RemovePermission" />
+                <xsd:enumeration value="sqs:SendMessage" />
+                <xsd:enumeration
+                    value="sqs:SetQueueAttributes" />
+                <xsd:enumeration value="sqs:*" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Resource">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="(arn:(aws[a-zA-Z\-]*)?:[a-z0-9\-.]+:.*)|()" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+</xsd:schema>

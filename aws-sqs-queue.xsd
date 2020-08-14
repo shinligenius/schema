@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+    xmlns="https://github.com/shinligenius/schema/aws-sqs-queue"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://github.com/shinligenius/schema/aws-sqs-queue"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import
+        namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xsd:element name="aws-sqs">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="QueueName" minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element ref="ContentBasedDeduplication"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="DelaySeconds"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="FifoQueue" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element
+                    ref="KmsDataKeyReusePeriodSeconds" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="KmsMasterKeyId"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="MaximumMessageSize"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="MessageRetentionPeriod"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element
+                    ref="ReceiveMessageWaitTimeSeconds" minOccurs="0"
+                    maxOccurs="1" />
+                <xsd:element ref="RedrivePolicy"
+                    minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="Tags" minOccurs="0"
+                    maxOccurs="unbounded" />
+                <xsd:element ref="VisibilityTimeout"
+                    minOccurs="0" maxOccurs="1" />
+
+                <!-- Custom fields -->
+                <xsd:element ref="policy" minOccurs="0"
+                    maxOccurs="1" />
+            </xsd:sequence>
+            <xsd:attribute name="reference-only"
+                type="xsd:boolean" default="false" />
+            <xsd:attribute name="configuration-paths"
+                type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="ContentBasedDeduplication">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="DelaySeconds">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="0" />
+                <xsd:maxInclusive value="900" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="FifoQueue">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="KmsDataKeyReusePeriodSeconds">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="60" />
+                <xsd:maxInclusive value="86400" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="KmsMasterKeyId">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="MaximumMessageSize">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1024" />
+                <xsd:maxInclusive value="262144" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="MessageRetentionPeriod">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="60" />
+                <xsd:maxInclusive value="1209600" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="QueueName" type="xsd:string" />
+
+    <xsd:element name="ReceiveMessageWaitTimeSeconds">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1" />
+                <xsd:maxInclusive value="20" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="Tags">
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="xsd:string">
+                    <xsd:attributeGroup
+                        ref="TagsAttributes" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="TagsAttributes">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:attributeGroup>
+
+    <xsd:element name="VisibilityTimeout">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="0" />
+                <xsd:maxInclusive value="43200" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- RedrivePolicy -->
+    <xsd:element name="RedrivePolicy">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="deadLetterTargetArn"
+                    minOccurs="1" maxOccurs="1" />
+                <xsd:element ref="maxReceiveCount"
+                    minOccurs="1" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="deadLetterTargetArn">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:pattern
+                    value="(arn:(aws[a-zA-Z\-]*)?:[a-z0-9\-.]+:.*)|()" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <xsd:element name="maxReceiveCount">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="0" />
+                <xsd:maxInclusive value="43200" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+
+    <!-- Custom fields -->
+    <xsd:element name="policy">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any namespace="##other"
+                    processContents="strict" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
